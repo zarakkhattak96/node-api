@@ -1,10 +1,16 @@
-import mongoose from "mongoose";
-import config from "../config";
+import { PrismaClient } from "@prisma/client";
+export const prisma = new PrismaClient();
 
-export const connectDb = async () =>
-	mongoose
-		.connect(config.DB_URL, {
-			dbName: "userData",
-		})
-		.then(() => console.log("Database Connected"))
-		.catch((e) => console.log(e));
+const connectPrisma = async () => {
+  await prisma
+    .$connect()
+    .catch((e: any) => {
+      console.log(e);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+  // console.log("Database connected");
+};
+
+export default connectPrisma;

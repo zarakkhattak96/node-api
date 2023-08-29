@@ -1,1 +1,1 @@
-export { UserRepositoryMongo } from "./users/user.repository.mongo";
+export { UserRepositoryPrisma } from "./users/user.repository.pris";

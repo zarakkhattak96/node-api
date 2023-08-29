@@ -2,33 +2,19 @@ import { Router } from "express";
 import { UserController } from "../controllers/user.controller";
 
 export const bootstrapUserRoutes = (userController: UserController): Router => {
-	const router = Router();
+  const router = Router();
 
-	// update user
+  // update user
+  router.put("/update", userController.update);
 
-	router.put("/update/:id", userController.update);
+  // deleting user
+  router.delete("/delete", userController.delete);
 
-	// deleting user
-	router.delete("/delete/:id", userController.delete);
+  // fetch User
+  router.get("/", userController.fetchAllUsers);
 
-	// fetch User
-	router.get("/fetch/:id", userController.fetch);
-	router.get("/", userController.fetchAllUsers);
+  // for registering user
+  router.post("/register", userController.register);
 
-	// for registering user
-	router.post("/register", userController.register);
-
-	return router;
+  return router;
 };
-
-//  fetch userdata
-// router.get("/all", User.getAllUsers)
-
-// create userdata
-
-// updating user
-
-// router.post("/update", User.updateUserData)
-
-// get user by id
-// router.get("/userid/:id", User.getUserById)

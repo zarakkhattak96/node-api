@@ -1,29 +1,30 @@
-import express, { Request, Response } from "express";
-import config from "./infra/config";
+import Express from "express";
+import config from "./infra/config/index";
 import { bootstrapDi } from "./infra/di";
-import { connectDb } from "./infra/db/conn";
+import connectPrisma from "./infra/db/conn";
 import { bootstrapUserRoutes } from "./routes/usersRoutes";
 import cors from "cors";
 
 const bootstrap = async () => {
-	await connectDb();
+  await connectPrisma();
 
-	const app = express();
-	app.use(express.json());
-	app.use(express.urlencoded({ extended: true }));
-	app.use(cors());
+  console.log("Database is connected");
+  const app = Express();
+  app.use(Express.json());
+  app.use(Express.urlencoded({ extended: true }));
+  app.use(cors());
 
-	const diContainer = bootstrapDi();
-	const userRouter = bootstrapUserRoutes(diContainer.userController);
+  const diContainer = bootstrapDi();
+  const userRouter = bootstrapUserRoutes(diContainer.userController);
 
-	// using routes
-	app.use("/api/v1/users", userRouter);
+  // using routes
+  app.use("/api/v1/users", userRouter);
 
-	const PORT = config.PORT;
+  const PORT = config.PORT;
 
-	app.listen(PORT, () => {
-		console.log(`App is live at ${PORT}`);
-	});
+  app.listen(PORT, () => {
+    console.log(`App is live at ${PORT}`);
+  });
 };
 
 bootstrap();
