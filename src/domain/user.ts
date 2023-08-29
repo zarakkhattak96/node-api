@@ -1,4 +1,3 @@
-// user entity
 export interface userData {
   id?: string;
   name: string;
