@@ -34,7 +34,7 @@ export class UserController {
 	update = async (req: Request, res: Response) => {
 		const { id } = req.params;
 		const { name, email, password, address, phone } = req.body;
-		// const user = await this.userService.fetchUser(id);
+		 const user = await this.userService.fetchUser(id);
 		const updateUser = await this.userService.updateUser({
 			name,
 			email,
@@ -43,7 +43,7 @@ export class UserController {
 			password,
 		});
 
-		return res.status(203).json(updateUser);
+		return res.status(203).json(user);
 	};
 
 	fetch = async (req: Request, res: Response) => {

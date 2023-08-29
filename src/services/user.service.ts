@@ -61,7 +61,7 @@ class UserService {
 
 	async deleteUser(
 		id: string,
-	): Promise<OkResp<string> | DoesNotExist<"User is not deleted">> {
+	): Promise<OkResp<string> | DoesNotExist<string>> {
 		try {
 			await this.userRepo.delete(id);
 			return { status: "ok", data: "deletedUser" };
