@@ -1,5 +1,6 @@
-import * as bcrypt from "bcrypt";
-import type { userData, UserRepository } from "../domain/user";
+import argon2 from "argon2";
+import { userData, UserRepository } from "../domain/user";
+import { autoInjectable, inject } from "tsyringe";
 
 type OkResp<T> = {
   status: "ok";
@@ -27,9 +28,12 @@ export interface UpdatedUserDto {
   address: string;
 }
 
+@autoInjectable()
 class UserService {
-  constructor(private readonly userRepo: UserRepository) {}
-
+  constructor(
+    @inject("UserRepositoryPrisma")
+    private readonly userRepo: UserRepository
+  ) {}
   async registerUser({
     name,
     email,
@@ -37,7 +41,7 @@ class UserService {
     phone,
     address,
   }: NewUserDto): Promise<OkResp<userData> | DoesNotExist<string>> {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await argon2.hash("password");
     const user: userData = {
       name,
       email,
@@ -70,7 +74,7 @@ class UserService {
   ): Promise<OkResp<userData> | DoesNotExist<string>> {
     try {
       const updatedUser = await this.userRepo.updateUser(userObject);
-      return { status: "ok", data: userObject };
+      return { status: "ok", data: updatedUser };
     } catch (e) {
       return {
         status: "doesnt exist",
@@ -80,8 +84,14 @@ class UserService {
   }
 
   async fetchAll() {
+    console.log("88888888");
     return this.userRepo.fetchAllUsers();
   }
 }
 
 export default UserService;
+function Injectable(): (
+  target: typeof UserService
+) => void | typeof UserService {
+  throw new Error("Function not implemented.");
+}

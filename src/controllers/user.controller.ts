@@ -1,12 +1,16 @@
 import type { Request, Response } from "express";
 import UserService from "../services/user.service";
-import { userData } from "@prisma/client";
+import { autoInjectable, inject } from "tsyringe";
 
+@autoInjectable()
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    @inject("UserService") private readonly userService: UserService
+  ) {}
 
   register = async (req: Request, res: Response) => {
     const { name, password, email, phone, address } = req.body;
+
     for (const val of [name, password, email]) {
       if (val === undefined)
         return res.status(422).json({ message: `Invalid post body` });
@@ -38,6 +42,7 @@ export class UserController {
   };
 
   fetchAllUsers = async (_req: Request, res: Response) => {
+    console.log("8========================)");
     const users = await this.userService.fetchAll();
 
     return res.status(200).json(users);

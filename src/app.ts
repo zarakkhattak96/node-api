@@ -1,6 +1,7 @@
+import "reflect-metadata";
 import Express from "express";
+import bootstrapDi from "./infra/di";
 import config from "./infra/config/index";
-import { bootstrapDi } from "./infra/di";
 import connectPrisma from "./infra/db/conn";
 import { bootstrapUserRoutes } from "./routes/usersRoutes";
 import cors from "cors";
@@ -14,7 +15,7 @@ const bootstrap = async () => {
   app.use(Express.urlencoded({ extended: true }));
   app.use(cors());
 
-  const diContainer = bootstrapDi();
+  const diContainer = await bootstrapDi();
   const userRouter = bootstrapUserRoutes(diContainer.userController);
 
   // using routes

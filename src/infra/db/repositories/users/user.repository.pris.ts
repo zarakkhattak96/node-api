@@ -1,9 +1,5 @@
-import { Types } from "@prisma/client/runtime/library";
 import { userData, UserRepository } from "../../../../domain/user";
 import { prisma } from "../../conn";
-import { userData as PrismaUser } from "@prisma/client";
-
-type DBUser = PrismaUser & { __v?: any };
 
 // fetching user data
 export class UserRepositoryPrisma extends UserRepository {
