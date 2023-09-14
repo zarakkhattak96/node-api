@@ -84,14 +84,8 @@ class UserService {
   }
 
   async fetchAll() {
-    console.log("88888888");
     return this.userRepo.fetchAllUsers();
   }
 }
 
 export default UserService;
-function Injectable(): (
-  target: typeof UserService
-) => void | typeof UserService {
-  throw new Error("Function not implemented.");
-}

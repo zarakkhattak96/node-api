@@ -42,7 +42,6 @@ export class UserController {
   };
 
   fetchAllUsers = async (_req: Request, res: Response) => {
-    console.log("8========================)");
     const users = await this.userService.fetchAll();
 
     return res.status(200).json(users);
