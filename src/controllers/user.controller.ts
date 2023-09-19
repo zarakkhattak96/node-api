@@ -1,6 +1,7 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import UserService from "../services/user.service";
 import { autoInjectable, inject } from "tsyringe";
+import { CreateUserDto } from "../validation/user.validation";
 
 @autoInjectable()
 export class UserController {
@@ -12,8 +13,7 @@ export class UserController {
     const { name, password, email, phone, address } = req.body;
 
     for (const val of [name, password, email]) {
-      if (val === undefined)
-        return res.status(422).json({ message: `Invalid post body` });
+      if (val === undefined) return console.log("Invalid Post Body");
     }
     const result = await this.userService.registerUser({
       name,
@@ -37,7 +37,6 @@ export class UserController {
   update = async (req: Request, res: Response) => {
     const dataUpdate = req.body;
     const user = await this.userService.updateUser(dataUpdate);
-    const userData = { dataUpdate };
     return res.status(203).json(user);
   };
 

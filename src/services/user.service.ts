@@ -1,6 +1,7 @@
 import argon2 from "argon2";
 import { userData, UserRepository } from "../domain/user";
 import { autoInjectable, inject } from "tsyringe";
+import { CreateUserDto, UpdateUserDto } from "../validation/user.validation";
 
 type OkResp<T> = {
   status: "ok";
@@ -11,22 +12,6 @@ type DoesNotExist<T> = {
   status: "doesnt exist";
   error: T;
 };
-
-export interface NewUserDto {
-  name: string;
-  email: string;
-  password: string;
-  phone: number;
-  address: string;
-}
-
-export interface UpdatedUserDto {
-  name: string;
-  email: string;
-  password: string;
-  phone: number;
-  address: string;
-}
 
 @autoInjectable()
 class UserService {
@@ -40,7 +25,7 @@ class UserService {
     password,
     phone,
     address,
-  }: NewUserDto): Promise<OkResp<userData> | DoesNotExist<string>> {
+  }: CreateUserDto): Promise<OkResp<userData> | DoesNotExist<string>> {
     const hashedPassword = await argon2.hash("password");
     const user: userData = {
       name,
@@ -69,18 +54,36 @@ class UserService {
     }
   }
 
-  async updateUser(
-    userObject: userData
-  ): Promise<OkResp<userData> | DoesNotExist<string>> {
+  async updateUser({
+    name,
+    email,
+    phone,
+    address,
+    password,
+  }: UpdateUserDto): Promise<OkResp<userData> | DoesNotExist<string>> {
     try {
-      const updatedUser = await this.userRepo.updateUser(userObject);
-      return { status: "ok", data: updatedUser };
-    } catch (e) {
-      return {
-        status: "doesnt exist",
-        error: "User Data could not be updated",
+      const hashedPassword = await argon2.hash("password");
+
+      const updatedUserWithHash = {
+        name,
+        email,
+        phone,
+        address,
+        password: hashedPassword,
       };
+      const updatedUser = await this.userRepo.updateUser(updatedUserWithHash);
+      console.log(updatedUser);
+      const hashedUser = await argon2.verify(hashedPassword, "password");
+      if (hashedUser) {
+        console.log("Passwords Match");
+        return { status: "ok", data: updatedUser };
+      } else {
+        console.log("Passwords do not match");
+      }
+    } catch (e) {
+      console.log(e);
     }
+    return { status: "doesnt exist", error: "HEHEHHE" };
   }
 
   async fetchAll() {
