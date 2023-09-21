@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import Express from "express";
 import bootstrapDi from "./infra/di";
-import config from "./infra/config/index";
 import connectPrisma from "./infra/db/conn";
-import { bootstrapUserRoutes } from "./routes/usersRoutes";
+import config from "./infra/config";
+import { bootstrapUserRoutes } from "./http/routes/usersRoutes";
 import cors from "cors";
 
 const bootstrap = async () => {

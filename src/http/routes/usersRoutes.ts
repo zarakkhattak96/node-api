@@ -2,9 +2,9 @@ import { Router } from "express";
 import { UserController } from "../controllers/user.controller";
 import {
   validateCreatedUser,
+  validateDeletedUser,
   validateUpdatedUser,
-} from "../validation/validator.instances";
-import validateInput from "../middleware/validation.middleware";
+} from "../../application/dtos/validation/validator.instances";
 
 export const bootstrapUserRoutes = (userController: UserController): Router => {
   const router = Router();
@@ -15,7 +15,7 @@ export const bootstrapUserRoutes = (userController: UserController): Router => {
   router.route("/update").patch(validateUpdatedUser, userController.update);
 
   // deleting user
-  router.delete("/delete", userController.delete);
+  router.route("/delete").delete(validateDeletedUser, userController.delete);
 
   // fetch User
   router.get("/", userController.fetchAllUsers);

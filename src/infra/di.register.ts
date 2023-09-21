@@ -1,7 +1,8 @@
 import { container } from "tsyringe";
-import UserService from "../services/user.service";
-import { UserController } from "../controllers/user.controller";
+import UserService from "../application/services/user.service";
+import { UserController } from "../http/controllers/user.controller";
 import { UserRepositoryPrisma } from "./db/repositories";
+import { UserRepoInterface } from "./db/repositories/users/user.repo.interface";
 
 const bootstrapDiRegister = async () => {
   const userServiceRegister = container.register<UserService>("UserService", {
@@ -15,11 +16,16 @@ const bootstrapDiRegister = async () => {
     "UserRepositoryPrisma",
     { useClass: UserRepositoryPrisma }
   );
+  const userRepoInterface = container.register<UserRepoInterface>(
+    "UserRepoInterface",
+    { useClass: UserRepositoryPrisma }
+  );
 
   return {
     userServiceRegister,
     userControllerRegister,
     userRepoPrismaRegister,
+    userRepoInterface,
   };
 };
 

@@ -1,6 +1,6 @@
 import { container } from "tsyringe";
-import { UserController } from "../controllers/user.controller";
-import UserService from "../services/user.service";
+import { UserController } from "../http/controllers/user.controller";
+import UserService from "../application/services/user.service";
 import { UserRepositoryPrisma } from "./db/repositories";
 import bootstrapDiRegister from "./di.register";
 
@@ -11,6 +11,7 @@ const bootstrapDi = async () => {
   const userRepository = container.resolve(UserRepositoryPrisma);
   const userService = container.resolve(UserService);
   const userController = container.resolve(UserController);
+  const userRepoInterface = container.resolve(UserRepositoryPrisma);
 
   return { userRepository, userService, userController };
 };

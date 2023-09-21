@@ -1,3 +1,4 @@
+import { userSchemaZod } from "./user.dto";
 import { z, ZodType } from "zod";
 
 // add this DeepNonNullable thing to get rid of the undefined part in zod schema
@@ -7,39 +8,10 @@ type DeepNonNullable<T> = T extends (infer U)[]
   ? { [K in keyof T]: DeepNonNullable<T[K]> }
   : NonNullable<T>;
 
-export const userSchemaZod = z.object({
-  name: z
-    .string({
-      required_error: "Name is required",
-    })
-    .nonempty(),
-  email: z
-    .string({
-      required_error: "Email is required",
-    })
-    .nonempty()
-    .email("Invalid Email"),
-  password: z
-    .string({
-      required_error: "Password must be provided",
-    })
-    .nonempty()
-    .min(5)
-    .nonempty(),
-  phone: z
-    .number({
-      required_error: "Phone number must be provided",
-    })
-    .min(9),
-  address: z
-    .string({
-      required_error: "Address must be provided",
-    })
-    .nonempty(),
-});
-
 const userID = z.object({ id: z.string() });
 const userWithId = userSchemaZod.merge(userID);
+
+export type DeleteUserDto = z.infer<typeof userSchemaZod>;
 
 // We want our database to automatically assign an id to the user when he creates an account;
 // that is why we create a type of the userSchemaZod which does not have id in it

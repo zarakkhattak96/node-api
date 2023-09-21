@@ -1,9 +1,11 @@
-import { userData, UserRepository } from "../../../../domain/user";
+import { userEntity } from "../../../../domain/entities/user.entity";
+// import { UserPort } from "../../../../domain/repositories/user.port";
 import { prisma } from "../../conn";
+import { UserRepoInterface } from "./user.repo.interface";
 
 // fetching user data
-export class UserRepositoryPrisma extends UserRepository {
-  fetchAllUsers = async () => {
+export class UserRepositoryPrisma implements UserRepoInterface {
+  getAllUsers = async () => {
     const allUsers = await prisma.userData.findMany();
     return allUsers;
   };
@@ -15,7 +17,7 @@ export class UserRepositoryPrisma extends UserRepository {
     password,
     address,
     phone,
-  }: userData) => {
+  }: userEntity) => {
     const userObject = { name, email, password, address, phone };
     const newUser = await prisma.userData.create({
       data: userObject,
@@ -23,7 +25,7 @@ export class UserRepositoryPrisma extends UserRepository {
     return newUser;
   };
 
-  deleteUser = async (userObject: userData) => {
+  deleteUser = async (userObject: userEntity) => {
     const user = await prisma.userData.delete({
       where: {
         email: userObject.email,
@@ -33,14 +35,13 @@ export class UserRepositoryPrisma extends UserRepository {
     return user;
   };
 
-  updateUser = async (dataUpdate: userData) => {
+  updateUser = async (dataUpdate: userEntity) => {
     const userUpdated = await prisma.userData.update({
       where: {
         email: dataUpdate.email,
       },
       data: dataUpdate,
     });
-    if (userUpdated === null) throw new Error("User is null");
     return userUpdated;
   };
 }
